@@ -15,6 +15,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'taskipingwin.hopto.org',
     '158.160.208.146',
+    'testserver',
 ]
 
 
