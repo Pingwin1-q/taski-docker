@@ -12,14 +12,26 @@ services:
     volumes:
       - pg_data_production:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
   backend:
     image: pingwin1q/taski_backend
     env_file: .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - static_volume:/backend_static
     restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'python -c "import socket; s=socket.create_connection((''127.0.0.1'', 8000), 2); s.close()"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
   frontend:
     image: pingwin1q/taski_frontend
     env_file: .env
@@ -35,5 +47,6 @@ services:
     ports:
       - 8000:80
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped

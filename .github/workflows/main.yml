@@ -172,3 +172,4 @@ jobs:
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --noinput
             sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
             sudo docker compose -f docker-compose.production.yml run --rm frontend
+            sudo docker compose -f docker-compose.production.yml restart gateway
